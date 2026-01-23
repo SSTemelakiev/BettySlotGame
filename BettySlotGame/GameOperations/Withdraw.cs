@@ -7,13 +7,16 @@ public class Withdraw : IGameOperation
 {
     public override string ToString() => "withdraw";
     
-    public decimal ProcessOperation(IGameService gameService, decimal amount)
+    public string ProcessOperation(IGameSessionService gameSessionSessionService, int gameSessionId, decimal withdrawalAmount)
     {
-        throw new NotImplementedException();
-    }
-
-    public void DisplayBalance(decimal balance)
-    {
-        throw new NotImplementedException();
+        if (withdrawalAmount <= 0) return "Amount must be positive.";
+        
+        var balance =  gameSessionSessionService.GetBalance(gameSessionId);
+        
+        if (withdrawalAmount > balance) return "Insufficient funds for withdrawal.";
+        
+        balance = gameSessionSessionService.DecreaseBalance(gameSessionId, withdrawalAmount);
+        
+        return $"Your withdrawal of ${withdrawalAmount} was successful. Your current balance is: ${balance}";
     }
 }

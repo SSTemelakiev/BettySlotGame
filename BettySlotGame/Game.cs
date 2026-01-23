@@ -10,18 +10,18 @@ public static class Game
 {
     public static void Start(IHost host)
     {
-        var gameService = host.Services.GetRequiredService<IGameService>();
-        var gameOperations = host.Services.GetServices<IGameOperation>();
-        
-       // var newId = await gameService.CreateGame(100.50m);
-
         var exit = false;
+        var gameSessionId = 0;
         
         while (!exit)
         {
             Console.WriteLine("Please submit action:");
             var command = Console.ReadLine();
 
+            using var scope = host.Services.CreateScope();
+            var gameService = scope.ServiceProvider.GetRequiredService<IGameSessionService>();
+            var gameOperations = scope.ServiceProvider.GetServices<IGameOperation>();
+                
             try
             {
                 var action = InputProcessor.ReadAction(command);
@@ -38,8 +38,10 @@ public static class Game
 
                 if (strategy != null)
                 {
-                    var balance = strategy.ProcessOperation(gameService, InputProcessor.ReadAmount(action));
-                    strategy.DisplayBalance(balance);
+                    if (gameSessionId == 0) gameSessionId = gameService.CreateGameSession(0);
+                    
+                    var displayMessage = strategy.ProcessOperation(gameService, gameSessionId, InputProcessor.ReadAmount(command));
+                    Console.WriteLine(displayMessage);
                 }
                 else
                 {

@@ -15,7 +15,7 @@ public static class ServiceCollectionExtension
         services.AddDbContext<BettySlotGameDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-         services.AddTransient<IGameService, GameService>();
+         services.AddTransient<IGameSessionService, GameSessionSessionService>();
          
          var operationsTypes = typeof(IGameOperation).Assembly.GetTypes()
              .Where(t => typeof(IGameOperation).IsAssignableFrom(t) && !t.IsInterface);

@@ -5,5 +5,14 @@ namespace Database;
 
 public class BettySlotGameDbContext(DbContextOptions<BettySlotGameDbContext> options) : DbContext(options)
 {
-    public DbSet<GameEntity> Games { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<GameSessionEntity>()
+            .Property(g => g.Balance)
+            .HasPrecision(18, 2);
+    }
+
+    public DbSet<GameSessionEntity> GameSessions { get; set; }
 }
