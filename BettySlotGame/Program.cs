@@ -1,7 +1,9 @@
-﻿using Database;
+﻿using BettySlotGame;
+using BettySlotGame.extensions;
+using Microsoft.Extensions.Hosting;
 
-var factory = new BettySlotGameDbContextFactory();
-using var db = factory.CreateDbContext(args);
+using var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) => { services.AddServices(context.Configuration); })
+    .Build();
 
-db.Database.EnsureCreated();
-Console.WriteLine("Successfully connected using appsettings.json!");
+Game.Start(host);

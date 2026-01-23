@@ -5,7 +5,7 @@ namespace BettySlotGame.Helpers;
 
 public static class InputProcessor
 {
-    public static string ReadOperation(string? input)
+    public static string ReadAction(string? input)
     {
         while (true)
         {
@@ -24,8 +24,8 @@ public static class InputProcessor
     {
         while (true)
         {
-            var inputParts = input?.Split(' ');
-            if (inputParts != null && inputParts.Length > 0 && TryParseAmount(inputParts[1], out var amount) &&
+            var inputParts = input?.Split(' ').Skip(1).ToArray();
+            if (inputParts != null && inputParts.Length > 0 && TryParseAmount(inputParts[0], out var amount) &&
                 amount > 0)
             {
                 return amount.RoundToTwoDecimals();
