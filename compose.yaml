@@ -1,0 +1,7 @@
+﻿services:
+  bettyslotgame:
+    image: bettyslotgame
+    build:
+      context: .
+      dockerfile: BettySlotGame/Dockerfile
+
