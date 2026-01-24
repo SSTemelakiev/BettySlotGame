@@ -8,13 +8,7 @@ public static class DisplayMessages
     public static string InputProcessorReadAmountMessage => "Please enter a valid positive amount.";
 
     #endregion
-
-    #region Game Session Service
-
-    public static string GameNotFoundMessage(int gameId) => $"Game with {gameId} was not found.";
-
-    #endregion
-
+  
     #region Game
 
     public static string SubmitActionMessage => "Please submit action:";

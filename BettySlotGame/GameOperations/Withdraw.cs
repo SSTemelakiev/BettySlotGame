@@ -1,6 +1,7 @@
 using BettySlotGame.Constants;
 using BettySlotGame.GameOperations.Interfaces;
 using BettySlotGame.Services.Interfaces;
+using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.GameOperations;
 
@@ -10,16 +11,16 @@ public class Withdraw(IGameSessionService gameSessionSessionService, IBalanceSer
     
     public string ProcessOperation(int gameSessionId, decimal withdrawalAmount)
     {
-        if (withdrawalAmount <= 0) return DisplayMessages.AmountMustBePositiveMessage;
+        if (withdrawalAmount <= 0) return AmountMustBePositiveMessage;
         
         var gameSession = gameSessionSessionService.GetGameSession(gameSessionId);
         
         var balance =  balanceService.GetBalance(gameSession);
         
-        if (withdrawalAmount > balance) return DisplayMessages.InsufficientFundsForWithdrawalMessage;
+        if (withdrawalAmount > balance) return InsufficientFundsForWithdrawalMessage;
         
         balance = balanceService.DecreaseBalance(gameSession, withdrawalAmount);
         
-        return DisplayMessages.SuccessWithdrawalMessage(withdrawalAmount, balance);
+        return SuccessWithdrawalMessage(withdrawalAmount, balance);
     }
 }

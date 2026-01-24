@@ -4,6 +4,7 @@ using BettySlotGame.Helpers;
 using BettySlotGame.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame;
 
@@ -16,7 +17,7 @@ public static class Game
         
         while (!exit)
         {
-            Console.WriteLine(DisplayMessages.SubmitActionMessage);
+            Console.WriteLine(SubmitActionMessage);
             var command = Console.ReadLine();
 
             using var scope = host.Services.CreateScope();
@@ -29,7 +30,7 @@ public static class Game
 
                 if (action.Equals(CommandNames.Exit, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine(DisplayMessages.EndGameMessage);
+                    Console.WriteLine(EndGameMessage);
                     exit = true;
                     continue;
                 }
@@ -46,12 +47,12 @@ public static class Game
                 }
                 else
                 {
-                    Console.WriteLine(DisplayMessages.UnknownCommandMessage(command));
+                    Console.WriteLine(UnknownCommandMessage(command));
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(DisplayMessages.ExceptionMessage(e.Message));
+                Console.WriteLine(ExceptionMessage(e.Message));
                 throw;
             }
         }

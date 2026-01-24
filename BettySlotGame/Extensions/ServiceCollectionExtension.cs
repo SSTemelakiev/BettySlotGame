@@ -15,16 +15,16 @@ public static class ServiceCollectionExtension
         services.AddDbContext<BettySlotGameDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-         services.AddTransient<IGameSessionService, GameSessionSessionService>();
-         services.AddTransient<IBalanceService, BalanceService>();
-         services.AddTransient<IRandomProvider, RandomProvider>();
-         
-         var operationsTypes = typeof(IGameOperation).Assembly.GetTypes()
-             .Where(t => typeof(IGameOperation).IsAssignableFrom(t) && !t.IsInterface);
+        services.AddScoped<IGameSessionService, GameSessionSessionService>();
+        services.AddScoped<IBalanceService, BalanceService>();
+        services.AddScoped<IRandomProvider, RandomProvider>();
 
-         foreach (var operation in operationsTypes)
-         {
-             services.AddScoped(typeof(IGameOperation), operation);
-         }
+        var operationsTypes = typeof(IGameOperation).Assembly.GetTypes()
+            .Where(t => typeof(IGameOperation).IsAssignableFrom(t) && !t.IsInterface);
+
+        foreach (var operation in operationsTypes)
+        {
+            services.AddScoped(typeof(IGameOperation), operation);
+        }
     }
 }

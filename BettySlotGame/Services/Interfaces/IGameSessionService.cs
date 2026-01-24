@@ -5,5 +5,5 @@ namespace BettySlotGame.Services.Interfaces;
 public interface IGameSessionService
 {
     public int CreateGameSession(decimal balance);
-    public GameSessionEntity GetGameSession(int gameId);
+    public GameSessionEntity GetGameSession(int gameSessionId);
 }

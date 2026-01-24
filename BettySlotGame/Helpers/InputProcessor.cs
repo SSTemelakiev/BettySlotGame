@@ -1,6 +1,6 @@
 using System.Globalization;
-using BettySlotGame.Constants;
 using BettySlotGame.Extensions;
+using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.Helpers;
 
@@ -16,7 +16,7 @@ public static class InputProcessor
                 return inputParts[0];
             }
 
-            Console.WriteLine(DisplayMessages.InputProcessorReadActionMessage);
+            Console.WriteLine(InputProcessorReadActionMessage);
             input = Console.ReadLine();
         }
     }
@@ -32,7 +32,7 @@ public static class InputProcessor
                 return amount.RoundToTwoDecimals();
             }
 
-            Console.WriteLine(DisplayMessages.InputProcessorReadAmountMessage);
+            Console.WriteLine(InputProcessorReadAmountMessage);
             input = Console.ReadLine();
         }
     }
