@@ -3,19 +3,21 @@ using BettySlotGame.Services.Interfaces;
 
 namespace BettySlotGame.GameOperations;
 
-public class Withdraw : IGameOperation
+public class Withdraw(IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
 {
     public override string ToString() => "withdraw";
     
-    public string ProcessOperation(IGameSessionService gameSessionSessionService, int gameSessionId, decimal withdrawalAmount)
+    public string ProcessOperation(int gameSessionId, decimal withdrawalAmount)
     {
         if (withdrawalAmount <= 0) return "Amount must be positive.";
         
-        var balance =  gameSessionSessionService.GetBalance(gameSessionId);
+        var gameSession = gameSessionSessionService.GetGameSession(gameSessionId);
+        
+        var balance =  balanceService.GetBalance(gameSession);
         
         if (withdrawalAmount > balance) return "Insufficient funds for withdrawal.";
         
-        balance = gameSessionSessionService.DecreaseBalance(gameSessionId, withdrawalAmount);
+        balance = balanceService.DecreaseBalance(gameSession, withdrawalAmount);
         
         return $"Your withdrawal of ${withdrawalAmount} was successful. Your current balance is: ${balance}";
     }

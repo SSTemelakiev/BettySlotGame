@@ -4,14 +4,14 @@ using BettySlotGame.Services.Interfaces;
 
 namespace BettySlotGame.GameOperations;
 
-public class Bet : IGameOperation
+public class Bet(IRandomProvider randomProvider, IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
 {
     public override string ToString() => "bet";
 
-    public string ProcessOperation(IGameSessionService gameSessionSessionService, int gameSessionId,
-        decimal betAmount)
+    public string ProcessOperation(int gameSessionId, decimal betAmount)
     {
-        var balance = gameSessionSessionService.GetBalance(gameSessionId);
+        var gameSession =  gameSessionSessionService.GetGameSession(gameSessionId);
+        var balance = balanceService.GetBalance(gameSession);
 
         if (balance < 1) return "Insufficient funds. Your balance is less than minimum bet betAmount of $1.";
 
@@ -19,29 +19,29 @@ public class Bet : IGameOperation
 
         if (betAmount < 1 || betAmount > 10) return "BetAmount betAmount must be between $1 and $10.";
 
-        var roll = Random.Shared.Next(1, 101);
+        var roll = randomProvider.GetRandomNumberForWinChance();
         decimal multiplier = 0;
         decimal winAmount = 0;
 
         switch (roll)
         {
             case <= 50:
-                balance = gameSessionSessionService.DecreaseBalance(gameSessionId, betAmount);
+                balance = balanceService.DecreaseBalance(gameSession, betAmount);
                 return $"No luck this time! Your current balance is  ${balance}";
             case <= 90:
-                multiplier = (decimal)(Random.Shared.NextDouble() * (2.0 - 0.1) + 0.1);
+                multiplier = randomProvider.GetRandomMultiplierForSmallWin();
                 winAmount = (betAmount * multiplier).RoundToTwoDecimals();
                 
-                balance = gameSessionSessionService.DecreaseBalance(gameSessionId, betAmount);
-                balance = gameSessionSessionService.IncreaseBalance(gameSessionId, winAmount);
+                balanceService.DecreaseBalance(gameSession, betAmount);
+                balance = balanceService.IncreaseBalance(gameSession, winAmount);
                 
                 return $"Congrats - you won ${winAmount}! Your current balance is  ${balance}";
             default:
-                multiplier = (decimal)(Random.Shared.NextDouble() * (10.0 - 2.0) + 2.0);
+                multiplier = randomProvider.GetRandomMultiplierForBigWin();
                 winAmount = (betAmount * multiplier).RoundToTwoDecimals();
                 
-                balance = gameSessionSessionService.DecreaseBalance(gameSessionId, betAmount);
-                balance = gameSessionSessionService.IncreaseBalance(gameSessionId, winAmount);
+                balanceService.DecreaseBalance(gameSession, betAmount);
+                balance = balanceService.IncreaseBalance(gameSession, winAmount);
                 
                 return $"Congrats - you won ${winAmount}! Your current balance is  ${balance}";
         }

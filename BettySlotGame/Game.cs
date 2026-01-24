@@ -40,7 +40,7 @@ public static class Game
                 {
                     if (gameSessionId == 0) gameSessionId = gameService.CreateGameSession(0);
                     
-                    var displayMessage = strategy.ProcessOperation(gameService, gameSessionId, InputProcessor.ReadAmount(command));
+                    var displayMessage = strategy.ProcessOperation(gameSessionId, InputProcessor.ReadAmount(command));
                     Console.WriteLine(displayMessage);
                 }
                 else

@@ -16,6 +16,8 @@ public static class ServiceCollectionExtension
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
          services.AddTransient<IGameSessionService, GameSessionSessionService>();
+         services.AddTransient<IBalanceService, BalanceService>();
+         services.AddTransient<IRandomProvider, RandomProvider>();
          
          var operationsTypes = typeof(IGameOperation).Assembly.GetTypes()
              .Where(t => typeof(IGameOperation).IsAssignableFrom(t) && !t.IsInterface);

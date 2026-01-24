@@ -15,32 +15,7 @@ public class GameSessionSessionService(BettySlotGameDbContext context) : IGameSe
         return gameSession.Id;
     }
 
-    public decimal GetBalance(int gameSessionId)
-    {
-        var gameSession = GetGameSession(gameSessionId);
-        
-        return gameSession.Balance.RoundToTwoDecimals();
-    }
-
-    public decimal IncreaseBalance(int gameSessionId, decimal amount)
-    {
-        var gameSession = GetGameSession(gameSessionId);
-        
-        gameSession.Balance += amount.RoundToTwoDecimals();
-        context.SaveChanges();
-        return gameSession.Balance.RoundToTwoDecimals();
-    }
-    
-    public decimal DecreaseBalance(int gameSessionId, decimal amount)
-    {
-        var gameSession = GetGameSession(gameSessionId);
-        
-        gameSession.Balance -= amount.RoundToTwoDecimals();
-        context.SaveChanges();
-        return gameSession.Balance.RoundToTwoDecimals();
-    }
-
-    private GameSessionEntity GetGameSession(int gameId)
+    public GameSessionEntity GetGameSession(int gameId)
     {
         var gameSession =  context.GameSessions.FirstOrDefault(g => g.Id == gameId);
         
