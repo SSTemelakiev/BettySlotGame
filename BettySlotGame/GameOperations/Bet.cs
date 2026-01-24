@@ -22,8 +22,8 @@ public class Bet(IRandomProvider randomProvider, IGameSessionService gameSession
         if (betAmount < 1 || betAmount > 10) return InvalidBetAmountMessage;
 
         var roll = randomProvider.GetRandomNumberForWinChance();
-        decimal multiplier = 0;
-        decimal winAmount = 0;
+        decimal multiplier;
+        decimal winAmount;
 
         switch (roll)
         {
