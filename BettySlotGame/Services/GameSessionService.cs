@@ -9,7 +9,7 @@ using static BettySlotGame.Constants.LoggerMessages;
 
 namespace BettySlotGame.Services;
 
-public class GameSessionSessionService(BettySlotGameDbContext context, ILogger<GameSessionSessionService> logger) : IGameSessionService
+public class GameSessionService(BettySlotGameDbContext context, ILogger<GameSessionService> logger) : IGameSessionService
 {
     public async Task<int> CreateGameSession(decimal balance)
     {

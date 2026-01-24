@@ -17,7 +17,7 @@ public static class ServiceCollectionExtension
         
         services.AddSingleton<GameStateService>();
 
-        services.AddScoped<IGameSessionService, GameSessionSessionService>();
+        services.AddScoped<IGameSessionService, GameSessionService>();
         services.AddScoped<IBalanceService, BalanceService>();
         services.AddScoped<IRandomProvider, RandomProvider>();
 
