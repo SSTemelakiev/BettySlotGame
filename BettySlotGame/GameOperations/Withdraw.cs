@@ -6,22 +6,25 @@ using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.GameOperations;
 
-public class Withdraw(GameStateService gameStateService, IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
+public class Withdraw(
+    GameStateService gameStateService,
+    IGameSessionService gameSessionSessionService,
+    IBalanceService balanceService) : IGameOperation
 {
     public override string ToString() => CommandNames.Withdraw;
-    
-    public string ProcessOperation(decimal withdrawalAmount)
+
+    public async Task<string> ProcessOperation(decimal withdrawalAmount)
     {
         if (withdrawalAmount <= 0) return AmountMustBePositiveMessage;
-        
-        var gameSession = gameSessionSessionService.GetGameSession(gameStateService.CurrentSessionId);
-        
-        var balance =  balanceService.GetBalance(gameSession);
-        
+
+        var gameSession = await gameSessionSessionService.GetGameSession(gameStateService.CurrentSessionId);
+
+        var balance = await balanceService.GetBalance(gameSession);
+
         if (withdrawalAmount > balance) return InsufficientFundsForWithdrawalMessage;
-        
-        balance = balanceService.DecreaseBalance(gameSession, withdrawalAmount);
-        
+
+        balance = await balanceService.DecreaseBalance(gameSession, withdrawalAmount);
+
         return SuccessWithdrawalMessage(withdrawalAmount, balance);
     }
 }

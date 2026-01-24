@@ -3,6 +3,7 @@ using BettySlotGame.Extensions;
 using BettySlotGame.Services.Interfaces;
 using Database;
 using Database.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using static BettySlotGame.Constants.LoggerMessages;
 
@@ -10,7 +11,7 @@ namespace BettySlotGame.Services;
 
 public class GameSessionSessionService(BettySlotGameDbContext context, ILogger<GameSessionSessionService> logger) : IGameSessionService
 {
-    public int CreateGameSession(decimal balance)
+    public async Task<int> CreateGameSession(decimal balance)
     {
         try
         {
@@ -18,7 +19,7 @@ public class GameSessionSessionService(BettySlotGameDbContext context, ILogger<G
         
             var gameSession = new GameSessionEntity { Balance = balance.RoundToTwoDecimals() };
             context.GameSessions.Add(gameSession);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         
             logger.LogInformation(SuccessfullyCreatedGameSessionMessage(gameSession.Id));
             return gameSession.Id;
@@ -30,11 +31,11 @@ public class GameSessionSessionService(BettySlotGameDbContext context, ILogger<G
         }
     }
 
-    public GameSessionEntity GetGameSession(int gameSessionId)
+    public async Task<GameSessionEntity> GetGameSession(int gameSessionId)
     {
         logger.LogDebug(GetGameSessionMessage(gameSessionId));
         
-        var gameSession =  context.GameSessions.FirstOrDefault(g => g.Id == gameSessionId);
+        var gameSession = await context.GameSessions.FirstOrDefaultAsync(g => g.Id == gameSessionId);
         
         if (gameSession == null)
         {

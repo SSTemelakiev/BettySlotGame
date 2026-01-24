@@ -11,7 +11,7 @@ namespace BettySlotGame;
 
 public static class Game
 {
-    public static void Start(IHost host)
+    public static async Task Start(IHost host)
     {
         var exit = false;
         
@@ -23,7 +23,7 @@ public static class Game
             using var scope = host.Services.CreateScope();
             var gameService = scope.ServiceProvider.GetRequiredService<IGameSessionService>();
             var gameOperations = scope.ServiceProvider.GetServices<IGameOperation>();
-            var gameStateService = host.Services.GetRequiredService<GameStateService>();
+            var gameStateService = scope.ServiceProvider.GetRequiredService<GameStateService>();
                 
             try
             {
@@ -41,9 +41,9 @@ public static class Game
 
                 if (strategy != null)
                 {
-                    if (gameStateService.CurrentSessionId == 0) gameStateService.CurrentSessionId = gameService.CreateGameSession(0);
+                    if (gameStateService.CurrentSessionId == 0) gameStateService.CurrentSessionId = await gameService.CreateGameSession(0);
                     
-                    var displayMessage = strategy.ProcessOperation(InputProcessor.ReadAmount(command));
+                    var displayMessage = await strategy.ProcessOperation(InputProcessor.ReadAmount(command));
                     Console.WriteLine(displayMessage);
                 }
                 else

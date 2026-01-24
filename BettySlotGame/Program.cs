@@ -6,4 +6,4 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) => { services.AddServices(context.Configuration); })
     .Build();
 
-Game.Start(host);
+await Game.Start(host);

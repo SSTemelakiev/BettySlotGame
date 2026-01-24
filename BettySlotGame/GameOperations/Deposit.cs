@@ -6,18 +6,21 @@ using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.GameOperations;
 
-public class Deposit(GameStateService gameStateService, IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
+public class Deposit(
+    GameStateService gameStateService,
+    IGameSessionService gameSessionSessionService,
+    IBalanceService balanceService) : IGameOperation
 {
     public override string ToString() => CommandNames.Deposit;
-    
-    public string ProcessOperation(decimal depositAmount)
+
+    public async Task<string> ProcessOperation(decimal depositAmount)
     {
         if (depositAmount <= 0) return AmountMustBePositiveMessage;
-        
-        var gameSession = gameSessionSessionService.GetGameSession(gameStateService.CurrentSessionId);
-        
-        var balance = balanceService.IncreaseBalance(gameSession, depositAmount);
-        
+
+        var gameSession = await gameSessionSessionService.GetGameSession(gameStateService.CurrentSessionId);
+
+        var balance = await balanceService.IncreaseBalance(gameSession, depositAmount);
+
         return SuccessDepositMessage(depositAmount, balance);
     }
 }
