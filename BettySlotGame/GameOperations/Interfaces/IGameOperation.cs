@@ -4,5 +4,5 @@ namespace BettySlotGame.GameOperations.Interfaces;
 
 public interface IGameOperation
 {
-   public string ProcessOperation(int gameSessionId, decimal betAmount);
+   public string ProcessOperation(decimal betAmount);
 }

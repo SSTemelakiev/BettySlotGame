@@ -1,18 +1,19 @@
 using BettySlotGame.Constants;
 using BettySlotGame.Extensions;
 using BettySlotGame.GameOperations.Interfaces;
+using BettySlotGame.Services;
 using BettySlotGame.Services.Interfaces;
 using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.GameOperations;
 
-public class Bet(IRandomProvider randomProvider, IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
+public class Bet(IRandomProvider randomProvider, GameStateService gameStateService ,IGameSessionService gameSessionSessionService, IBalanceService balanceService) : IGameOperation
 {
     public override string ToString() => CommandNames.Bet;
 
-    public string ProcessOperation(int gameSessionId, decimal betAmount)
+    public string ProcessOperation(decimal betAmount)
     {
-        var gameSession =  gameSessionSessionService.GetGameSession(gameSessionId);
+        var gameSession =  gameSessionSessionService.GetGameSession(gameStateService.CurrentSessionId);
         var balance = balanceService.GetBalance(gameSession);
 
         if (balance < 1) return BalanceLessThanMinimumBetAmount;

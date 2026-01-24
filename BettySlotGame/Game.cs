@@ -1,6 +1,7 @@
 using BettySlotGame.Constants;
 using BettySlotGame.GameOperations.Interfaces;
 using BettySlotGame.Helpers;
+using BettySlotGame.Services;
 using BettySlotGame.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,6 @@ public static class Game
     public static void Start(IHost host)
     {
         var exit = false;
-        var gameSessionId = 0;
         
         while (!exit)
         {
@@ -23,6 +23,7 @@ public static class Game
             using var scope = host.Services.CreateScope();
             var gameService = scope.ServiceProvider.GetRequiredService<IGameSessionService>();
             var gameOperations = scope.ServiceProvider.GetServices<IGameOperation>();
+            var gameStateService = host.Services.GetRequiredService<GameStateService>();
                 
             try
             {
@@ -40,9 +41,9 @@ public static class Game
 
                 if (strategy != null)
                 {
-                    if (gameSessionId == 0) gameSessionId = gameService.CreateGameSession(0);
+                    if (gameStateService.CurrentSessionId == 0) gameStateService.CurrentSessionId = gameService.CreateGameSession(0);
                     
-                    var displayMessage = strategy.ProcessOperation(gameSessionId, InputProcessor.ReadAmount(command));
+                    var displayMessage = strategy.ProcessOperation(InputProcessor.ReadAmount(command));
                     Console.WriteLine(displayMessage);
                 }
                 else

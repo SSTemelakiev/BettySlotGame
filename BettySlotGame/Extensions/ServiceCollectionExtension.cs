@@ -14,6 +14,8 @@ public static class ServiceCollectionExtension
     {
         services.AddDbContext<BettySlotGameDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        
+        services.AddSingleton<GameStateService>();
 
         services.AddScoped<IGameSessionService, GameSessionSessionService>();
         services.AddScoped<IBalanceService, BalanceService>();
