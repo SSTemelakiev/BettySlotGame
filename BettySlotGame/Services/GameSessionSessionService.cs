@@ -1,3 +1,4 @@
+using BettySlotGame.Constants;
 using BettySlotGame.Extensions;
 using BettySlotGame.Services.Interfaces;
 using Database;
@@ -19,6 +20,6 @@ public class GameSessionSessionService(BettySlotGameDbContext context) : IGameSe
     {
         var gameSession =  context.GameSessions.FirstOrDefault(g => g.Id == gameId);
         
-        return gameSession ?? throw new KeyNotFoundException($"Game with {gameId} was not found.");
+        return gameSession ?? throw new KeyNotFoundException(DisplayMessages.GameNotFoundMessage(gameId));
     }
 }

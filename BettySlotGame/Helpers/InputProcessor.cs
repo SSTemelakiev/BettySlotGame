@@ -1,4 +1,5 @@
 using System.Globalization;
+using BettySlotGame.Constants;
 using BettySlotGame.Extensions;
 
 namespace BettySlotGame.Helpers;
@@ -15,7 +16,7 @@ public static class InputProcessor
                 return inputParts[0];
             }
 
-            Console.WriteLine("Please enter a valid action.");
+            Console.WriteLine(DisplayMessages.InputProcessorReadActionMessage);
             input = Console.ReadLine();
         }
     }
@@ -31,7 +32,7 @@ public static class InputProcessor
                 return amount.RoundToTwoDecimals();
             }
 
-            Console.WriteLine("Please enter a valid positive amount.");
+            Console.WriteLine(DisplayMessages.InputProcessorReadAmountMessage);
             input = Console.ReadLine();
         }
     }

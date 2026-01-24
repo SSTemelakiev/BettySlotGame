@@ -1,3 +1,4 @@
+using BettySlotGame.Constants;
 using BettySlotGame.GameOperations.Interfaces;
 using BettySlotGame.Helpers;
 using BettySlotGame.Services.Interfaces;
@@ -15,7 +16,7 @@ public static class Game
         
         while (!exit)
         {
-            Console.WriteLine("Please submit action:");
+            Console.WriteLine(DisplayMessages.SubmitActionMessage);
             var command = Console.ReadLine();
 
             using var scope = host.Services.CreateScope();
@@ -26,9 +27,9 @@ public static class Game
             {
                 var action = InputProcessor.ReadAction(command);
 
-                if (action.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                if (action.Equals(CommandNames.Exit, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine("Thank you for playing! Hope to see you again soon.");
+                    Console.WriteLine(DisplayMessages.EndGameMessage);
                     exit = true;
                     continue;
                 }
@@ -45,12 +46,12 @@ public static class Game
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown command: {command}");
+                    Console.WriteLine(DisplayMessages.UnknownCommandMessage(command));
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error: {e.Message}");
+                Console.WriteLine(DisplayMessages.ExceptionMessage(e.Message));
                 throw;
             }
         }
