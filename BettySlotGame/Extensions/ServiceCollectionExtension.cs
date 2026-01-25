@@ -14,12 +14,6 @@ public static class ServiceCollectionExtension
     {
         services.AddDbContext<BettySlotGameDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-        
-        services.AddSingleton<GameStateService>();
-
-        services.AddScoped<IGameSessionService, GameSessionService>();
-        services.AddScoped<IBalanceService, BalanceService>();
-        services.AddScoped<IRandomProvider, RandomProvider>();
 
         var operationsTypes = typeof(IGameOperation).Assembly.GetTypes()
             .Where(t => typeof(IGameOperation).IsAssignableFrom(t) && !t.IsInterface);
@@ -28,5 +22,11 @@ public static class ServiceCollectionExtension
         {
             services.AddScoped(typeof(IGameOperation), operation);
         }
+        
+        services.AddSingleton<GameStateService>();
+
+        services.AddScoped<IGameSessionService, GameSessionService>();
+        services.AddScoped<IBalanceService, BalanceService>();
+        services.AddScoped<IRandomProvider, RandomProvider>();
     }
 }

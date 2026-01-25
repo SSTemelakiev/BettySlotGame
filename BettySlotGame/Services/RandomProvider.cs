@@ -8,11 +8,11 @@ public class RandomProvider(ILogger<RandomProvider> logger) : IRandomProvider
 {
     public double GetRandomNumberForWinChance()
     {
-        var roll = Random.Shared.Next(1, 101);
+        var winChance = Random.Shared.Next(1, 101);
 
-        logger.LogDebug(GetRandomNumberForWinMessage(roll));
+        logger.LogDebug(GetRandomNumberForWinMessage(winChance));
         
-        return roll;
+        return winChance;
     }
 
     public decimal GetRandomMultiplierForSmallWin()

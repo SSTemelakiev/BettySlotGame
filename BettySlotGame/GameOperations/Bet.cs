@@ -3,6 +3,7 @@ using BettySlotGame.Extensions;
 using BettySlotGame.GameOperations.Interfaces;
 using BettySlotGame.Services;
 using BettySlotGame.Services.Interfaces;
+using Database.Models;
 using static BettySlotGame.Constants.DisplayMessages;
 
 namespace BettySlotGame.GameOperations;
@@ -26,31 +27,27 @@ public class Bet(
 
         if (betAmount < 1 || betAmount > 10) return InvalidBetAmountMessage;
 
-        var roll = randomProvider.GetRandomNumberForWinChance();
-        decimal multiplier;
-        decimal winAmount;
-
-        switch (roll)
+        return randomProvider.GetRandomNumberForWinChance() switch
         {
-            case <= 50:
-                balance = await balanceService.DecreaseBalance(gameSession, betAmount);
-                return LoseMessage(balance);
-            case <= 90:
-                multiplier = randomProvider.GetRandomMultiplierForSmallWin();
-                winAmount = (betAmount * multiplier).RoundToTwoDecimals();
+            <= 50 => await PlaceLost(gameSession, betAmount),
+            <= 90 => await PlaceWin(gameSession, betAmount, randomProvider.GetRandomMultiplierForSmallWin()),
+            _ => await PlaceWin(gameSession, betAmount, randomProvider.GetRandomMultiplierForBigWin())
+        };
+    }
 
-                await balanceService.DecreaseBalance(gameSession, betAmount);
-                balance = await balanceService.IncreaseBalance(gameSession, winAmount);
+    private async Task<string> PlaceLost(GameSessionEntity gameSession, decimal betAmount)
+    {
+        var balance = await balanceService.DecreaseBalance(gameSession, betAmount);
+        return LoseMessage(balance);
+    }
 
-                return WinMessage(winAmount, balance);
-            default:
-                multiplier = randomProvider.GetRandomMultiplierForBigWin();
-                winAmount = (betAmount * multiplier).RoundToTwoDecimals();
+    private async Task<string> PlaceWin(GameSessionEntity gameSession, decimal betAmount, decimal multiplier)
+    {
+        var winAmount = (betAmount * multiplier).RoundToTwoDecimals();
 
-                await balanceService.DecreaseBalance(gameSession, betAmount);
-                balance = await balanceService.IncreaseBalance(gameSession, winAmount);
+        await balanceService.DecreaseBalance(gameSession, betAmount);
+        var balance = await balanceService.IncreaseBalance(gameSession, winAmount);
 
-                return WinMessage(winAmount, balance);
-        }
+        return WinMessage(winAmount, balance);
     }
 }
