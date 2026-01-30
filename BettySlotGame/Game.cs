@@ -3,6 +3,7 @@ using BettySlotGame.GameOperations.Interfaces;
 using BettySlotGame.Helpers;
 using BettySlotGame.Services;
 using BettySlotGame.Services.Interfaces;
+using Database;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using static BettySlotGame.Constants.DisplayMessages;
@@ -21,6 +22,9 @@ public static class Game
             var command = Console.ReadLine();
 
             using var scope = host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<BettySlotGameDbContext>();
+            await context.Database.EnsureCreatedAsync();
+            
             var gameService = scope.ServiceProvider.GetRequiredService<IGameSessionService>();
             var gameOperations = scope.ServiceProvider.GetServices<IGameOperation>();
             var gameStateService = scope.ServiceProvider.GetRequiredService<GameStateService>();
