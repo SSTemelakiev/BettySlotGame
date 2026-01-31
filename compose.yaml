@@ -10,6 +10,7 @@
       - MSSQL_SA_PASSWORD=YvKjqWq5rdWHCTyDnm1W7UoxIJzNutPC4wR1wGnWHyfE2iNJJcJzGl68bVTvBxlf
     volumes:
       - sqldata:/var/opt/mssql
+      
   bettyslotgame:
     image: bettyslotgame
     build:
@@ -18,6 +19,9 @@
     network_mode: "host"
     stdin_open: true
     tty: true
+    restart: on-failure
+    depends_on:
+      - data
 
 volumes:
   sqldata:
