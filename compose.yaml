@@ -1,5 +1,5 @@
 ﻿services:
-  mssql:
+  data:
     image: mcr.microsoft.com/mssql/server:2022-latest
     platform: linux/amd64
     container_name: mssql
@@ -8,6 +8,8 @@
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YvKjqWq5rdWHCTyDnm1W7UoxIJzNutPC4wR1wGnWHyfE2iNJJcJzGl68bVTvBxlf
+    volumes:
+      - sqldata:/var/opt/mssql
   bettyslotgame:
     image: bettyslotgame
     build:
@@ -17,3 +19,5 @@
     stdin_open: true
     tty: true
 
+volumes:
+  sqldata:
